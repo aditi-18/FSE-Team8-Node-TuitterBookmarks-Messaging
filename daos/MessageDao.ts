@@ -3,7 +3,7 @@
  * @file Implements DAO managing data storage of messages. Uses mongoose TuitModel
  * to integrate with MongoDB
  */
- import Mesaage from "../models/Message";
+ import Message from "../models/Message";
  import MessageModel from "../mongoose/MessageModel";
  import MessageDaoI from "../interfaces/MessageDao";
  
@@ -30,7 +30,7 @@
       * @param uid Represents id of the user1.
       */
     
-     outgoingMessages = async (uid :string): Promise<Mesaage[]> =>
+     outgoingMessages = async (uid :string): Promise<Message[]> =>
          MessageModel.find({from: uid});
 
     /**
@@ -38,7 +38,7 @@
       * @param uid Represents id of the user.
       */
 
-     incomingMessages = async (uid: string): Promise<Mesaage[]> =>
+     incomingMessages = async (uid: string): Promise<Message[]> =>
          MessageModel.find({to: uid});
 
     /**
@@ -48,8 +48,8 @@
       * @param messages Represents message of the user
       */
     
-     userMessagesAnotherUser= async (uid1: string, uid2: string, messages:Mesaage): Promise<Mesaage> =>
-         MessageModel.create({...messages, from: uid1, to: uid2});
+     userMessagesAnotherUser= async (uid1: string, messages:Message): Promise<Message> =>
+         MessageModel.create({...messages, from: uid1});
 
 
     /**
@@ -60,6 +60,12 @@
 
      userDeletesAMessage = async (uid1: string, uid2: string): Promise<any> =>
          MessageModel.deleteOne({from: uid1, to: uid2});
+
+
+      findMessage = async (conversationId: string): Promise<Message[]> =>
+         MessageModel.find({conversationId: conversationId}).exec();
+
+     
  }
 
  

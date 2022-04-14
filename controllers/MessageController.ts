@@ -34,8 +34,9 @@
             MessageController.messageController = new MessageController();
               app.get("/api/users/:uid/outgoingmessages", MessageController.messageController.outgoingMessages);
               app.get("/api/users/:uid/incomingmessages", MessageController.messageController.incomingMessages);
-              app.post("/api/users/:uid1/message/:uid2", MessageController.messageController.userMessagesAnotherUser);
+              app.post("/api/users/:uid1/message", MessageController.messageController.userMessagesAnotherUser);
               app.delete("/api/user/:uid1/deletemessage/:uid2", MessageController.messageController.userDeletesAMessage);
+              app.get("/api/users/findMessages/:conversationId", MessageController.messageController.findMessage);
           }
           return MessageController.messageController;
       }
@@ -59,9 +60,15 @@
        * @param {Response} res Represents response to client, including the
        * body formatted as JSON arrays containing the message objects
        */
-       incomingMessages = (req: Request, res: Response) =>
-         MessageController.messageDao.incomingMessages(req.params.uid)
-              .then((message: Message[]) => res.json(message));
+       incomingMessages = (req: Request, res: Response) => {
+        // @ts-ignore
+        let userId = req.params.uid1 === 'my' && req.session['profile'] ?
+            // @ts-ignore
+            req.session['profile']._id : req.params.uid1;
+            MessageController.messageDao.incomingMessages(userId)
+            .then((message: Message[]) => res.json(message));
+    }
+        
   
       /**
        * Creates a new message instance
@@ -72,9 +79,15 @@
        * body formatted as JSON containing the new message that was inserted in the
        * database
        */
-       userMessagesAnotherUser = (req: Request, res: Response) =>
-         MessageController.messageDao.userMessagesAnotherUser(req.params.uid1,req.params.uid2,req.body)
+       userMessagesAnotherUser = (req: Request, res: Response) => {
+            // @ts-ignore
+            let userId = req.params.uid1 === 'my' && req.session['profile'] ?
+            // @ts-ignore
+            req.session['profile']._id : req.params.uid1;
+            console.log(userId);
+         MessageController.messageDao.userMessagesAnotherUser(userId,req.body)
               .then((message: Message) => res.json(message));
+       }
   
       /**
        * Removes a message instance from the database
@@ -86,6 +99,11 @@
        userDeletesAMessage = (req: Request, res: Response) =>
          MessageController.messageDao.userDeletesAMessage(req.params.uid1,req.params.uid2)
               .then((status) => res.send(status));
+
+        findMessage = (req: Request, res: Response) =>
+              MessageController.messageDao.findMessage(req.params.conversationId)
+                   .then((message: Message[]) => res.json(message));
+        
   };
  
  
