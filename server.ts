@@ -25,6 +25,7 @@
  import FollowController from './controllers/FollowController';
  import MessageController from './controllers/MessageController';
  import AuthenticationController from "./controllers/AuthenticationController";
+ import ConversationController from './controllers/ConversationController';
  //import SessionController from './controllers/SessionController';
  import mongoose from "mongoose";
  var cors = require('cors')
@@ -39,7 +40,7 @@
  const app = express();
  app.use(cors({
     credentials: true,
-    origin: 'https://fanciful-paprenjak-ad283a.netlify.app'
+    origin: 'http://localhost:3000'
 }));
 
 const SECRET = 'process.env.SECRET';
@@ -62,7 +63,7 @@ app.use(session(sess))
  
  app.get('/', (req: Request, res: Response) =>
      res.send('Hello World!'));
- 
+
  app.get('/add/:a/:b', (req: Request, res: Response) =>
      res.send(req.params.a + req.params.b));
  
@@ -74,6 +75,7 @@ app.use(session(sess))
  const bookmarksController = BookmarkController.getInstance(app);
  const followController = FollowController.getInstance(app);
  const messageController = MessageController.getInstance(app);
+ const conversationController = ConversationController.getInstance(app);
  //SessionController(app);
  AuthenticationController(app);
  
