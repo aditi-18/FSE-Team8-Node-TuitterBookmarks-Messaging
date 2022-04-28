@@ -58,8 +58,8 @@
       * @param uid2 Represents id of the user2.
       */
 
-     userDeletesAMessage = async (uid1: string, uid2: string): Promise<any> =>
-         MessageModel.deleteOne({from: uid1, to: uid2});
+     userDeletesAMessage = async (uid1: string, conversationId: string): Promise<any> =>
+         MessageModel.deleteMany({from: uid1, conversationId: conversationId});
 
 
       findMessage = async (conversationId: string): Promise<Message[]> =>
@@ -67,5 +67,3 @@
 
      
  }
-
- 

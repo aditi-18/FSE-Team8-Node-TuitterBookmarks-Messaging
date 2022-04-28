@@ -12,6 +12,7 @@ export default class ConversationDao implements ConversationDaoI{
          return ConversationDao.conversationDao;
      }
      private constructor() {}
+    
 
 createConversation = async (uid1:string,uid2:string) : Promise<Conversation> => {
    return ConversationModel.create({ members: [uid1, uid2] });
@@ -24,5 +25,10 @@ findConversationOfUser = async (uid1:string) : Promise<Conversation[]> => {
 findConversationOfBothUsers = async (uid1:string,uid2:string) : Promise<Conversation[]> => {
     return ConversationModel.find({members:{$all:[uid1,uid2]}})
   
-}};
+};
 
+deleteConversation = async (cid: string): Promise<any> => {
+    return ConversationModel.deleteOne({_id: cid});
+};
+
+};
