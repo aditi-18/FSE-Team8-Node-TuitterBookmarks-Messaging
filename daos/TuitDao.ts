@@ -95,4 +95,10 @@
              {_id: tid},
              {$set: {stats: newStats}}
         );
+
+     updateBookmarks = async (tid: string, newStats: any): Promise<any> =>
+                  TuitModel.updateOne(
+                     {_id: tid},
+                     {$set: {stats: newStats}}
+                );
  }
