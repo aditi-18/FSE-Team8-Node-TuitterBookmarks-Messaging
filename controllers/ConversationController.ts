@@ -13,6 +13,7 @@ export default class ConversationController implements ConversationControllerI {
             app.get("/api/users/findConversation/:uid1/:uid2", ConversationController.conversationController.findConversationOfBothUsers);
             app.get("/api/users/conversation/:uid1", ConversationController.conversationController.findConversationOfUser);
             app.post("/api/users/conversation", ConversationController.conversationController.createConversation);
+            app.delete("/api/users/deleteconversation/:cid", ConversationController.conversationController.deleteConversation);
         }
         return ConversationController.conversationController;
     }
@@ -31,5 +32,9 @@ ConversationController.conversationDao.findConversationOfBothUsers(req.params.ui
 findConversationOfUser = (req: Request, res: Response) =>
 ConversationController.conversationDao.findConversationOfUser(req.params.uid1)
 .then((conversation: Conversation[]) => res.json(conversation));
+
+deleteConversation = (req: Request, res: Response) =>
+          ConversationController.conversationDao.deleteConversation(req.params.cid)
+              .then((status) => res.send(status));
 
 }

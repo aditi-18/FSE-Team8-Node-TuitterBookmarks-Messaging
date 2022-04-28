@@ -35,7 +35,7 @@
               app.get("/api/users/:uid/outgoingmessages", MessageController.messageController.outgoingMessages);
               app.get("/api/users/:uid/incomingmessages", MessageController.messageController.incomingMessages);
               app.post("/api/users/:uid1/message", MessageController.messageController.userMessagesAnotherUser);
-              app.delete("/api/user/:uid1/deletemessage/:uid2", MessageController.messageController.userDeletesAMessage);
+              app.delete("/api/user/:uid1/deletemessage/:conversationId", MessageController.messageController.userDeletesAMessage);
               app.get("/api/users/findMessages/:conversationId", MessageController.messageController.findMessage);
           }
           return MessageController.messageController;
@@ -68,7 +68,8 @@
             MessageController.messageDao.incomingMessages(userId)
             .then((message: Message[]) => res.json(message));
     }
-        
+        //  MessageController.messageDao.incomingMessages(req.params.uid)
+        //       .then((message: Message[]) => res.json(message));
   
       /**
        * Creates a new message instance
@@ -85,6 +86,10 @@
             // @ts-ignore
             req.session['profile']._id : req.params.uid1;
             console.log(userId);
+    //           MessageController.messageDao.userMessagesAnotherUser(userId, req.params.uid2, req.body)
+    //           .then((message: Message) => res.json(message));
+
+    // }
          MessageController.messageDao.userMessagesAnotherUser(userId,req.body)
               .then((message: Message) => res.json(message));
        }
@@ -97,7 +102,7 @@
        * on whether deleting a user was successful or not
        */
        userDeletesAMessage = (req: Request, res: Response) =>
-         MessageController.messageDao.userDeletesAMessage(req.params.uid1,req.params.uid2)
+         MessageController.messageDao.userDeletesAMessage(req.params.uid1,req.params.conversationId)
               .then((status) => res.send(status));
 
         findMessage = (req: Request, res: Response) =>
@@ -105,5 +110,3 @@
                    .then((message: Message[]) => res.json(message));
         
   };
- 
- 
